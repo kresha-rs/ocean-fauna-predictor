@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comprehensive Ocean Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .location-info {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4682b4;
+        }
+        
+        .zone-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #3a7ca5;
+        }
+        
+        .zone-header {
+            color: #2c3e50;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .zone-stats {
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+        
+        .stats-line {
+            margin: 10px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        .stats-value {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        
+        .organism-section {
+            background-color: #f0f5fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        
+        .organism-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+        
+        .sample-species {
+            margin-top: 10px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        .species-list {
+            column-count: 2;
+            column-gap: 20px;
+        }
+        
+        .btn-primary, .btn-secondary {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .summary-box {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body class="results-bg" style="background-image: url('{{ url_for('static', filename='images/backgrounds/' + background) }}')">
+    <div class="container">
+        <h1>Comprehensive Ocean Analysis Results</h1>
+        
+        <div class="location-info">
+            <h3>Analyzing all pelagic zones at {{ latitude }}°, {{ longitude }}° in {{ year }}...</h3>
+            
+            {% if latitude > 60 %}
+            <p>Analyzing ocean at {{ latitude }}°, {{ longitude }}° in {{ year }} (Arctic)</p>
+            {% elif latitude < -60 %}
+            <p>Analyzing ocean at {{ latitude }}°, {{ longitude }}° in {{ year }} (Antarctic)</p>
+            {% elif latitude > 23.5 %}
+            <p>Analyzing ocean at {{ latitude }}°, {{ longitude }}° in {{ year }} (North Temperate)</p>
+            {% elif latitude < -23.5 %}
+            <p>Analyzing ocean at {{ latitude }}°, {{ longitude }}° in {{ year }} (South Temperate)</p>
+            {% elif latitude >= 0 %}
+            <p>Analyzing ocean at {{ latitude }}°, {{ longitude }}° in {{ year }} (North Tropical)</p>
+            {% else %}
+            <p>Analyzing ocean at {{ latitude }}°, {{ longitude }}° in {{ year }} (South Tropical)</p>
+            {% endif %}
+        </div>
+        
+        <div class="summary-box">
+            <h2>Summary of conditions and organisms by zone:</h2>
+            <p>Analysis completed successfully for {{ results|length }} ocean zones</p>
+        </div>
+        
+        {% for zone_result in results %}
+        <div class="zone-section">
+            <h3 class="zone-header">Predicted conditions for {{ zone_result.zone }} 
+            {% if latitude > 60 %}in Arctic
+            {% elif latitude < -60 %}in Antarctic
+            {% elif latitude > 23.5 %}in North Temperate
+            {% elif latitude < -23.5 %}in South Temperate
+            {% elif latitude >= 0 %}in North Tropical
+            {% else %}in South Tropical
+            {% endif %} ({{ year }}):</h3>
+            
+            <div class="zone-stats">
+                <div class="stats-line">
+                    Average Temperature: <span class="stats-value">{{ zone_result.avg_temperature }}°C</span>
+                </div>
+                <div class="stats-line">
+                    Average Salinity: <span class="stats-value">{{ zone_result.avg_salinity }} ppt</span>
+                </div>
+            </div>
+            
+            {% if zone_result.organisms %}
+            <div class="organism-section">
+                <div class="organism-title">
+                    Biodiversity Analysis: {{ zone_result.organism_count }} species found in {{ zone_result.zone }}
+                </div>
+                
+                <div class="sample-species">
+                    <strong>Representative species:</strong>
+                    <div class="species-list">
+                    {% set sample_count = 8 if zone_result.organism_count >= 8 else zone_result.organism_count %}
+                    {% for i in range(sample_count) if i < zone_result.organisms|length %}
+                        <div>• {{ zone_result.organisms[i].Species if 'Species' in zone_result.organisms[i] else "Unknown" }}</div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="organism-section">
+                <div class="organism-title">No specific organisms predicted for this zone at these conditions</div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <div class="form-actions" style="text-align: center; margin-top: 30px;">
+            <a href="{{ url_for('comprehensive_analysis') }}" class="btn-secondary">New Analysis</a>
+            <a href="{{ url_for('index') }}" class="btn-primary">Back to Home</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

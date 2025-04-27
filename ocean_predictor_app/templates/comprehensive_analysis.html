@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comprehensive Ocean Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="form-bg" style="background-image: url('{{ url_for('static', filename='images/backgrounds/' + background) }}')">
+    <div class="container">
+        <h1>Comprehensive Ocean Analysis</h1>
+        <p>Enter coordinates and year to analyze all ocean zones at this location</p>
+        
+        {% if error_message %}
+        <div class="error-message">
+            <p>{{ error_message }}</p>
+        </div>
+        {% endif %}
+        
+        <form action="{{ url_for('comprehensive_analysis') }}" method="post">
+            <div class="form-group">
+                <label for="latitude">Latitude:</label>
+                <input type="number" id="latitude" name="latitude" step="any" required 
+                       min="-90" max="90" placeholder="-90 to 90">
+            </div>
+            
+            <div class="form-group">
+                <label for="longitude">Longitude:</label>
+                <input type="number" id="longitude" name="longitude" step="any" required 
+                       min="-180" max="180" placeholder="-180 to 180">
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year" required 
+                       min="2000" max="2100" placeholder="2000-2100">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Analyze All Zones</button>
+                <a href="{{ url_for('index') }}" class="btn-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

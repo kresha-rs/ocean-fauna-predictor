@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="results-bg" style="background-image: url('{{ url_for('static', filename='images/backgrounds/' + background) }}')">
+    <div class="container">
+        <h1>{{ zone }} Zone Prediction Results</h1>
+        
+        <div class="location-info">
+            <p>Location: {{ latitude }}°, {{ longitude }}° | Year: {{ year }} | Climate Zone: {{ predictions[0].climate_zone }}</p>
+        </div>
+        
+        <div class="conditions">
+            <h2>Predicted Conditions:</h2>
+            
+            <!-- Display shared information only once -->
+            <h3>Ocean Parameters by Depth:</h3>
+            <table class="conditions-table">
+                <thead>
+                    <tr>
+                        <th>Depth (m)</th>
+                        <th>Temperature (°C)</th>
+                        <th>Salinity (ppt)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prediction in predictions %}
+                    <tr>
+                        <td>{{ prediction.depth }}</td>
+                        <td>{{ prediction.predicted_temperature|round(2) }}</td>
+                        <td>{{ prediction.predicted_salinity|round(2) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="organisms">
+            <h2>Suitable Organisms ({{ organisms|length }}):</h2>
+            <div class="organism-grid">
+                {% for org in organisms %}
+                <div class="organism-card">
+                    <div class="organism-image">
+                        <img src="{{ url_for('static', filename='images/organisms/' + org['Species'].replace(' ', '_').lower() + '.jpg') }}" 
+                             alt="{{ org['Species'] }}" 
+                             onerror="this.src='{{ url_for('static', filename='images/organisms/placeholder.jpg') }}'">
+                    </div>
+                    <div class="organism-info">
+                        <h4>{{ org['Species'] }}</h4>
+                        <p>Temp: {{ org.get('Temperature Min (°C)', '')|round(1) }}°C to {{ org.get('Temperature Max (°C)', '')|round(1) }}°C</p>
+                        <p>Salinity: {{ org.get('Salinity Min (ppt)', '')|round(1) }} to {{ org.get('Salinity Max (ppt)', '')|round(1) }} ppt</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{{ url_for('index') }}" class="btn-primary">Back to Home</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

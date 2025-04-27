@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ocean Fauna Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .hero {
+            text-align: center;
+            padding: 30px 20px 50px;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            color: #005792;
+            margin-bottom: 15px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #444;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: #f8fcff;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-bottom: 3px solid #0077cc;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 50px;
+            color: #0077cc;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #005792;
+        }
+        
+        .feature-card p {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .action-button {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body class="results-bg" style="background-image: url('{{ url_for('static', filename='images/backgrounds/' + background) }}')">
+    <div class="container">
+        <div class="hero">
+            <h1>Ocean Fauna Predictor</h1>
+            <p>Explore marine ecosystems and discover which organisms thrive in specific ocean conditions. Our advanced prediction model uses temperature, salinity, and depth data to provide accurate forecasts for various ocean zones.</p>
+            
+            <div class="action-buttons">
+                <a href="{{ url_for('specific_prediction') }}" class="btn-primary action-button">Specific Zone Prediction</a>
+                <a href="{{ url_for('comprehensive_analysis') }}" class="btn-primary action-button">Comprehensive Analysis</a>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🌊</div>
+                <h3>Specific Zone Prediction</h3>
+                <p>Analyze conditions for a specific pelagic zone at any location and year. Perfect for focused research on particular depth ranges.</p>
+                <a href="{{ url_for('specific_prediction') }}" class="btn-primary">Try It</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Comprehensive Analysis</h3>
+                <p>Get a complete picture of all ocean zones at once. Compare conditions and biodiversity across different depths.</p>
+                <a href="{{ url_for('comprehensive_analysis') }}" class="btn-primary">Try It</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🐠</div>
+                <h3>Species Identification</h3>
+                <p>Discover which marine organisms are likely to inhabit specific ocean conditions based on temperature and salinity preferences.</p>
+                <a href="{{ url_for('specific_prediction') }}" class="btn-primary">Explore</a>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

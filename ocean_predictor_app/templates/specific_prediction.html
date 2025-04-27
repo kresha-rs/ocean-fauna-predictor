@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Specific Zone Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="results-bg" style="background-image: url('{{ url_for('static', filename='images/backgrounds/' + background) }}')">
+    <div class="container">
+        <h1>Specific Ocean Zone Prediction</h1>
+        
+        <div class="location-info">
+            <p>Enter location coordinates, year, and select a pelagic zone to predict ocean conditions and potential organisms</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('specific_prediction') }}">
+            <div class="form-group">
+                <label for="latitude">Latitude (-90 to 90):</label>
+                <input type="number" id="latitude" name="latitude" step="0.1" min="-90" max="90" required>
+                <small>Positive values are North, negative values are South</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="longitude">Longitude (-180 to 180):</label>
+                <input type="number" id="longitude" name="longitude" step="0.1" min="-180" max="180" required>
+                <small>Positive values are East, negative values are West</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="year">Year (1900-2200):</label>
+                <input type="number" id="year" name="year" min="1900" max="2200" value="2025" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="zone">Pelagic Zone:</label>
+                <select id="zone" name="zone" required>
+                    {% for zone in zones %}
+                    <option value="{{ zone }}">{{ zone }}</option>
+                    {% endfor %}
+                </select>
+                <small>
+                    Epipelagic (0-200m) - Sunlight Zone<br>
+                    Mesopelagic (200-1000m) - Twilight Zone<br>
+                    Bathypelagic (1000-4000m) - Midnight Zone<br>
+                    Abyssopelagic (4000-11000m) - Abyss
+                </small>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Predict Conditions</button>
+            </div>
+        </form>
+        
+        <div class="form-actions">
+            <a href="{{ url_for('index') }}" class="btn-primary">Back to Home</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
